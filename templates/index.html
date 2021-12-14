@@ -7,12 +7,33 @@
   <title>First Innings Score Predictor</title>
   <link rel="shortcut icon" href="{% static 'ipl-favicon.ico' %}" />
   <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
   <script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet" />
+
 </head>
 
 <body>
   <!-- Website Title -->
+  <div class="header">
+    {% if user %}
+    <a class="btn btn-primary mt-3 float-end me-3" href="{% url 'logout' %}" style="width:100px">Logout</a>
+    {% else %}
+    <a class="btn btn-primary mt-3 float-end me-3" href="{% url 'login' %}" style="width:100px">Login</a>
+    <a class="btn btn-primary mt-3 float-end me-5" href="{% url 'register' %}" style="width:100px">Sign Up</a>
+    {% endif %}
+
+  </div>
+  <div>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+
   <div class="container">
     <h2 class="container-heading">
       <span class="heading_first">First Innings Score Predictor for </span><span class="heading_second">Indian Premier
@@ -110,8 +131,15 @@
           placeholder="Runs scored in previous 5 Overs eg. 42" /><br />
         <input class="form-input" type="text" name="wickets_in_prev_5"
           placeholder="Wickets taken in previous 5 Overs eg. 3" /><br />
+        <!-- <input type="submit" class="myButton" value="Predict Score" /> -->
 
+        {%if user%}
         <input type="submit" class="myButton" value="Predict Score" />
+        {%else%}
+        <div class="alert alert-warning" role="alert">
+          Please login to view predicted score!
+        </div>
+        {%endif%}
       </form>
     </div>
 
@@ -157,22 +185,7 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <!-- <div class="footer">
-      <div class="contact">
-        <a
-          target="_blank"
-          href="https://github.com/anujvyas/IPL-First-Innings-Score-Prediction-Deployment"
-          ><i class="fab fa-github fa-lg contact-icon"></i
-        ></a>
-        <a target="_blank" href="https://www.linkedin.com/in/anujkvyas"
-          ><i class="fab fa-linkedin fa-lg contact-icon"></i
-        ></a>
-      </div>
-      <p class="footer-description">
-        Made with ❤️ by Pranav Kumar,Hrishikesh Lamdade and Gokul Ramanan.
-      </p>
-    </div> -->
+
 </body>
 
 </html>

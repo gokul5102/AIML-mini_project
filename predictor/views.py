@@ -1,28 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 # from django.http import reponse
-
+from .forms import RegisterForm,LoginForm
+from django.views.generic import View
+from django.contrib.auth import authenticate,login
 # Create your views here.
 # Importing essential libraries
 import pickle
 import numpy as np
+from django.contrib import messages
+# from .models import User
+from django.contrib.auth.hashers import make_password
 
 # Load the Random Forest CLassifier model
 
-filename = r'C:\Users\Gokul\Desktop\match-predictor\first-innings-score-lr-model.pkl'
+filename = r'C:\Users\Gokul\Desktop\pkl files\first-innings-score-lr-model.pkl'
 regressor = pickle.load(open(filename, 'rb'))
 
 
 
-filename_rf = r'C:\Users\Gokul\Desktop\match-predictor\randomForest_jr.pkl'
+filename_rf = r'C:\Users\Gokul\Desktop\pkl files\randomForest_jr.pkl'
 
 rf = pickle.load(open(filename_rf, 'rb'))
 
-filename_knc = r'C:\Users\Gokul\Desktop\match-predictor\knc_jr.pkl'
+filename_knc = r'C:\Users\Gokul\Desktop\pkl files\knc_jr.pkl'
 
 knc = pickle.load(open(filename_knc, 'rb'))
 
 def home(request):
-	return render(request, 'index.html')
+    print(request.user.is_authenticated)
+    if(request.user.is_authenticated):
+        return render(request, 'index.html',{'user': True})
+    return render(request, 'index.html',{'user': False})
+    
 
 def predict(request):
     temp_array = list()
@@ -85,4 +94,37 @@ def predict(request):
         res = {'result':result, 'result_knc' : result_knc,'result_rf':result_rf}
 
         return render(request, 'result.html', res)
+
+class register(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'register.html')
+
+    def post(self, request, *args, **kwargs):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            print("11")
+            form.save()
+            messages.success(request,f'Your account has been created ! You are now able to login')
+            return redirect('login')
+        else:
+            return render(request, 'register.html', {'form': form,'errors':form.errors})
+
+class login(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'login.html')
+
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            print(request.POST['username'])
+            user = authenticate(username=request.POST['username'], password=request.POST['password'])
+            print(user)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request,f'Wrong credentials!Unable to login')
+            
+        return render(request, 'login.html', {'form': form})
+
 

@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'predictor'
+    'predictor',
+    'crispy_forms',
+    'rest_framework',
+    'knox'
 ]
 
 MIDDLEWARE = [
@@ -74,12 +77,24 @@ WSGI_APPLICATION = 'aiml.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'project',
+#         'CLIENT': {
+#            'host': 'mongodb+srv://gokul:test@aiml-project.oq9bv.mongodb.net/project?retryWrites=true&w=majority',
+#         }
+#     }
+# }
 
 
 # Password validation
