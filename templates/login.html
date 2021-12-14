@@ -26,6 +26,9 @@
             <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Login Form</h2>
+                    {% if error %}
+                        <div class="text-danger">{{error}}<div>
+                    {% endif %}
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row row-space">

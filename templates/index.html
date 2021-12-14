@@ -15,42 +15,31 @@
 
 <body>
   <!-- Website Title -->
-  <div class="header">
-    {% if user %}
-    <div class="d-flex flex-row mt-3 float-end">
-      <span class="float-end me-3 text-white"> Hello ,{{ username }} </span>
-      <a class="btn btn-primary float-end me-3" href="{% url 'logout' %}" style="width:100px">Logout</a>
-    </div>
-    {% else %}
-    <a class="btn btn-primary mt-3 float-end me-3" href="{% url 'login' %}" style="width:100px">Login</a>
-    <a class="btn btn-primary mt-3 float-end me-5" href="{% url 'register' %}" style="width:100px">Sign Up</a>
-    {% endif %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand ms-3" href="#">First Innings Score Predictor for IPL</a>
+        
+        {% if user %}
+          <div class="d-flex flex-row mt-3 float-end align-items-center">
+            <div class="mx-4">
+              <a href="{% url 'history' %}" class="btn btn-secondary">Check your history</a>
+            </div>
+            <span class="float-end me-3 text-white"> Hello ,{{ username }} </span>
+            <a class="btn btn-primary me-3 float-end" href="{% url 'logout' %}" style="width:100px">Logout</a>
+          </div>
+        {% else %}
+        <div class="d-flex flex-row float-end">
+          <a class="btn btn-primary float-end me-3" href="{% url 'login' %}" style="width:100px">Login</a>
+          <a class="btn btn-primary float-end me-5" href="{% url 'register' %}" style="width:100px">Sign Up</a>
+        </div>
+          {% endif %}
+    </nav>
 
-  </div>
-  <div>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-  </div>
-
-  <div class="container">
-    <h2 class="container-heading">
-      <span class="heading_first">First Innings Score Predictor for </span><span class="heading_second">Indian Premier
-        League (IPL)</span>
-    </h2>
-    <div class="description">
-      <!-- <p>
-          A Machine Learning Web App, Built with Flask, Deployed using Heroku.
-        </p> -->
-    </div>
-  </div>
 
   <!-- Prediction Area -->
-  <div class="prediction-area">
+  <div class="prediction-area mt-4">
     <!-- IPL Banner - 1 -->
     <div class="ipl-banner-left">
       <div class="slider-frame">

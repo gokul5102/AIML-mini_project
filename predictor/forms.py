@@ -8,8 +8,10 @@ class RegisterForm(ModelForm):
         fields=['username', 'email', 'password', 'password2']
     
     def validate(self,validated_data):
-        if(validated_data['password']!=validated_data['password2']):
-            return forms.ValidationError('Password mismatch!Please enter again')
+        if validated_data['password'] != validated_data['password2']:
+            raise forms.ValidationError('Password mismatch!Please enter again')
+        else:
+            return validated_data
 
 
 

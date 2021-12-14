@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home,name='home'),
     path('predict', views.predict),
     path('register', views.register.as_view(),name='register'),
-    path('login/', views.login.as_view(), name='login'),
-     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('login/', views.loginView.as_view(), name='login'),
+    path('history/', views.history, name='history'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
 ]

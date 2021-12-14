@@ -1,8 +1,11 @@
 from django.shortcuts import render,redirect
+
+from predictor.models import Query
 # from django.http import reponse
 from .forms import RegisterForm,LoginForm
 from django.views.generic import View
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 # Importing essential libraries
 import pickle
@@ -27,7 +30,7 @@ filename_knc = r'C:\Users\Asus\Desktop\AIML project\AIML-mini_project\pkl files\
 knc = pickle.load(open(filename_knc, 'rb'))
 
 def home(request):
-    print(request.user.is_authenticated)
+    print(request.user)
     if(request.user.is_authenticated):
         return render(request, 'index.html',{'user': True,'username':request.user.username})
     return render(request, 'index.html',{'user': False})
@@ -90,10 +93,30 @@ def predict(request):
         result_rf = int(rf.predict(data)[0])
         result_knc = int(knc.predict(data)[0])
 
-        
+        q= Query.objects.create(user= request.user.username,
+                                bat_team= batting_team,
+                                bowl_team= bowling_team,
+                                overs = overs,
+                                runs =runs,
+                                wickets = wickets,
+                                runs_in_prev_5 = runs_in_prev_5,
+                                wickets_in_prev_5 = wickets_in_prev_5,
+                                logistic_result = result,
+                                random_forest_result =result_rf ,
+                                knn_result =result_knc )
+        q.save()
         res = {'result':result, 'result_knc' : result_knc,'result_rf':result_rf,"username":request.user.username}
 
         return render(request, 'result.html', res)
+
+@login_required
+def history(request):
+    user=request.user.username
+    data=Query.objects.filter(user=user)
+    for i in data:
+        print(i.user)
+    return render(request, 'history.html',{'user': True,'username':request.user.username,'data':data})
+ 
 
 class register(View):
     def get(self, request, *args, **kwargs):
@@ -104,12 +127,12 @@ class register(View):
         if form.is_valid():
             print("11")
             form.save()
-            messages.success(request,f'Your account has been created ! You are now able to login')
-            return redirect('login')
+            # messages.success(request,f'Your account has been created ! You are now able to login')
+            return redirect('loginView')
         else:
             return render(request, 'register.html', {'form': form,'errors':form.errors})
 
-class login(View):
+class loginView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'login.html')
 
@@ -120,11 +143,10 @@ class login(View):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         print(user)
         if user is not None:
-            # login(request, user)
+            login(request, user)
             return redirect('home')
-        else:
-            messages.error(request,f'Wrong credentials!Unable to login')
+            # messages.error(request,f'Wrong credentials!Unable to login')
             
-        return render(request, 'login.html', {'form': form})
+        return render(request, 'login.html', {'form': form,'error':"Username or password incorrect."})
 
 

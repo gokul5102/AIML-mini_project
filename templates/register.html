@@ -33,6 +33,10 @@
             <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Registration Form</h2>
+
+                    {% if errors%}
+                    <div class="text-danger">{{errors}}</div>
+                    {% endif %}
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row row-space">
