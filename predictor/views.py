@@ -13,23 +13,23 @@ from django.contrib.auth.hashers import make_password
 
 # Load the Random Forest CLassifier model
 
-filename = r'C:\Users\Gokul\Desktop\pkl files\first-innings-score-lr-model.pkl'
+filename = r'C:\Users\Asus\Desktop\AIML project\AIML-mini_project\pkl files\first-innings-score-lr-model.pkl'
 regressor = pickle.load(open(filename, 'rb'))
 
 
 
-filename_rf = r'C:\Users\Gokul\Desktop\pkl files\randomForest_jr.pkl'
+filename_rf = r'C:\Users\Asus\Desktop\AIML project\AIML-mini_project\pkl files\randomForest_jr.pkl'
 
 rf = pickle.load(open(filename_rf, 'rb'))
 
-filename_knc = r'C:\Users\Gokul\Desktop\pkl files\knc_jr.pkl'
+filename_knc = r'C:\Users\Asus\Desktop\AIML project\AIML-mini_project\pkl files\knc_jr.pkl'
 
 knc = pickle.load(open(filename_knc, 'rb'))
 
 def home(request):
     print(request.user.is_authenticated)
     if(request.user.is_authenticated):
-        return render(request, 'index.html',{'user': True})
+        return render(request, 'index.html',{'user': True,'username':request.user.username})
     return render(request, 'index.html',{'user': False})
     
 
@@ -91,7 +91,7 @@ def predict(request):
         result_knc = int(knc.predict(data)[0])
 
         
-        res = {'result':result, 'result_knc' : result_knc,'result_rf':result_rf}
+        res = {'result':result, 'result_knc' : result_knc,'result_rf':result_rf,"username":request.user.username}
 
         return render(request, 'result.html', res)
 
@@ -115,15 +115,15 @@ class login(View):
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
-        if form.is_valid():
-            print(request.POST['username'])
-            user = authenticate(username=request.POST['username'], password=request.POST['password'])
-            print(user)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.error(request,f'Wrong credentials!Unable to login')
+        print(request.POST['username'])
+        print(request.POST['username'])
+        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        print(user)
+        if user is not None:
+            # login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request,f'Wrong credentials!Unable to login')
             
         return render(request, 'login.html', {'form': form})
 

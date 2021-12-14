@@ -17,7 +17,10 @@
   <!-- Website Title -->
   <div class="header">
     {% if user %}
-    <a class="btn btn-primary mt-3 float-end me-3" href="{% url 'logout' %}" style="width:100px">Logout</a>
+    <div class="d-flex flex-row mt-3 float-end">
+      <span class="float-end me-3 text-white"> Hello ,{{ username }} </span>
+      <a class="btn btn-primary float-end me-3" href="{% url 'logout' %}" style="width:100px">Logout</a>
+    </div>
     {% else %}
     <a class="btn btn-primary mt-3 float-end me-3" href="{% url 'login' %}" style="width:100px">Login</a>
     <a class="btn btn-primary mt-3 float-end me-5" href="{% url 'register' %}" style="width:100px">Sign Up</a>
@@ -133,13 +136,13 @@
           placeholder="Wickets taken in previous 5 Overs eg. 3" /><br />
         <!-- <input type="submit" class="myButton" value="Predict Score" /> -->
 
-        {%if user%}
+        {% if user %}
         <input type="submit" class="myButton" value="Predict Score" />
-        {%else%}
+        {% else %}
         <div class="alert alert-warning" role="alert">
           Please login to view predicted score!
         </div>
-        {%endif%}
+        {% endif %}
       </form>
     </div>
 
