@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 
 from predictor.models import Query
@@ -126,9 +127,12 @@ class register(View):
         form = RegisterForm(request.POST)
         if form.is_valid():
             print("11")
-            form.save()
+            data=request.POST
+            print(type(data['password']))
+            c=User.objects.create_user(username=data['username'],email=data['email'],password=data["password"])
+            c.save()
             # messages.success(request,f'Your account has been created ! You are now able to login')
-            return redirect('loginView')
+            return redirect('login')
         else:
             return render(request, 'register.html', {'form': form,'errors':form.errors})
 
@@ -138,7 +142,6 @@ class loginView(View):
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
-        print(request.POST['username'])
         print(request.POST['username'])
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         print(user)
